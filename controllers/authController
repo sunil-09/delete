@@ -1,0 +1,31 @@
+// controllers/authController.js
+const users = []; // In-memory user store
+
+// Register a new user
+exports.register = (req, res) => {
+  const { username, email, password } = req.body;
+
+  // Check if the user already exists
+  const existingUser = users.find(user => user.email === email);
+  if (existingUser) {
+    return res.status(400).send('User already exists. Please login.');
+  }
+
+  // Save the new user in memory
+  users.push({ username, email, password });
+  res.send('Registration successful! You can now <a href="/login">login</a>.');
+};
+
+// Login user
+exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  // Check if user exists and password matches
+  const user = users.find(user => user.email === email && user.password === password);
+  if (!user) {
+    return res.status(400).send('Invalid email or password');
+  }
+
+  // Login successful - Display welcome message
+  res.send(`Welcome, ${user.username}!`);
+};
